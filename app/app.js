@@ -92,8 +92,11 @@ da.segment.onresume = function() {
 
   var synthesis = da.SpeechSynthesis.getInstance();
   if (speechText != "") {
-    console.log("sppechText is", speechText);
-    var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + speechText;
+    var word =
+      speechText.charAt(0).toUpperCase() +
+      speechText.substring(1).toLowerCase();
+    console.log("sppechText is", word);
+    var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + word;
     console.log(url);
     $.ajax({
       url: url,
