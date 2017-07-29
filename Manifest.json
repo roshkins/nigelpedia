@@ -1,11 +1,11 @@
 {
-  "package": "com.rashirashi.textspeech",
+  "package": "com.rashirashi.npediatwo",
   "manifestVersion": 1,
   "name": "Npedia",
   "author": {
     "name": "Rashi and Ronak"
   },
-  "version": 7,
-  "versionName": "1.7.0",
-  "description": "Team Npedia\n\nRead wikipedia articles out loud, and cue them up by voice."
+  "version": 12,
+  "versionName": "1.12.0",
+  "description": "1.12.0 Team Npedia\n\nRead wikipedia articles out loud, and cue them up by voice."
 }

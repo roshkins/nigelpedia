@@ -1,11 +1,11 @@
 {
   "schema": {
-    "scope": "com.rashirashi.speechtext",
+    "scope": "com.rashirashi.npediatwo",
     "version": "1.0",
     "settings": [
       {
         "key": "description",
-        "displayName": "Team Npedia\n\nYou can cue up wikipedia articles by voice! Start the app by saying\n\nstart npedia\n\nContact Us\nroshkins@gmail.com",
+        "displayName": "Team Npedia\n\nYou can cue up wikipedia articles by voice! Start the app by saying\n\nstart encyclopedia\n\nContact Us\nroshkins@gmail.com",
         "layout": "description"
       }
     ]

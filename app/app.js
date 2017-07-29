@@ -25,6 +25,7 @@
 
 var speechText;
 var callbackErrorMessage;
+var speechUtil = new speechUtil();
 
 /**
  * The callback to prepare a segment for play.
@@ -48,7 +49,7 @@ da.segment.onstart = function(trigger, args) {
   var synthesis = da.SpeechSynthesis.getInstance();
 
   synthesis.speak(
-    "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to canecl.",
+    "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to cancel.",
     {
       onstart: function() {
         outputLog("[SpeechToText] speak onstart");
@@ -81,12 +82,12 @@ var getWikipediaResult = function(word, url, synthesis) {
     // dataType: "xml",
     success: function(data, textStatus, jqXHR) {
       var article = $(data).text();
-      outputLog("Wikipedia response:" + article);
-      synthesis.speak(article, {
+      outputLog("Wikipedia response:" + article.split("."));
+      speechUtil.speakList(article.split("."), {
         onstart: function() {
           outputLog("[SpeechToText] speak onstart");
         },
-        onend: function() {
+        onFinished: function() {
           outputLog("[SpeechToText] speak onend");
           da.stopSegment();
         },
