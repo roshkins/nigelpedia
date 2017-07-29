@@ -1,0 +1,7 @@
+{
+  "defaultValues": {
+    "scope": "com.rashirashi.speechtext",
+    "version": "1.0",
+    "settings": {}
+  }
+}

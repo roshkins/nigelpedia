@@ -1,0 +1,11 @@
+{
+  "package": "com.rashirashi.textspeech",
+  "manifestVersion": 1,
+  "name": "Speech To Text API Sample",
+  "author": {
+    "name": "Rashi and Ronak"
+  },
+  "version": 1,
+  "versionName": "1.0.0",
+  "description": "Sony Corporation\nSpeech To Text API Sample, customized!"
+}
