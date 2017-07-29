@@ -21,6 +21,8 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+
+ {"args":  {"recognitionSetString":"{  \"SemanticAnalysisResults\": [{\"SpeechRecogResult\": \"search encyclopedia for aviation\"}]}"}  }
  */
 
 var speechText;
@@ -34,6 +36,11 @@ var speechUtil = new speechUtil();
  */
 da.segment.onpreprocess = function(trigger, args) {
   outputLog("[SpeechToText] onpreprocess", { trigger: trigger, args: args });
+  var fullSpeechString = speechUtil.getUserSpeechCommand(args);
+  args = { args: {} };
+  args.args.searchWord = fullSpeechString.match(
+    /.*?encyclopedia(?: ?for)?(.*)/i
+  )[1];
   speechText = "";
   callbackErrorMessage = "";
   da.startSegment(trigger, args);
@@ -47,25 +54,29 @@ da.segment.onpreprocess = function(trigger, args) {
 da.segment.onstart = function(trigger, args) {
   outputLog("[SpeechToText] onstart", { trigger: trigger, args: args });
   var synthesis = da.SpeechSynthesis.getInstance();
+  if (args.searchWord.length < 1) {
+    synthesis.speak(
+      "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to cancel.",
+      {
+        onstart: function() {
+          outputLog("[SpeechToText] speak onstart");
+        },
+        onend: function() {
+          outputLog("[SpeechToText] speak onend");
 
-  synthesis.speak(
-    "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to cancel.",
-    {
-      onstart: function() {
-        outputLog("[SpeechToText] speak onstart");
-      },
-      onend: function() {
-        outputLog("[SpeechToText] speak onend");
-
-        var speechToText = new da.SpeechToText();
-        speechToText.startSpeechToText(callbackobject);
-      },
-      onerror: function(error) {
-        outputLog("[SpeechToText] speak cancel: " + error.message);
-        da.stopSegment();
+          var speechToText = new da.SpeechToText();
+          speechToText.startSpeechToText(callbackobject);
+        },
+        onerror: function(error) {
+          outputLog("[SpeechToText] speak cancel: " + error.message);
+          da.stopSegment();
+        }
       }
-    }
-  );
+    );
+  } else {
+    speechText = args.searchWord.trim();
+    fetchArticle();
+  }
 };
 
 /**
@@ -122,7 +133,7 @@ var getWikipediaResult = function(word, url, synthesis) {
   });
 };
 
-da.segment.onresume = function() {
+var fetchArticle = function() {
   outputLog("[SpeechToText] onresume");
   var synthesis = da.SpeechSynthesis.getInstance();
   if (0 <= speechText.indexOf("stop")) {
@@ -173,6 +184,7 @@ da.segment.onresume = function() {
   }
 };
 
+da.segment.onresume = fetchArticle;
 /**
  * The callback to get result from SpeechToText api.
  *
