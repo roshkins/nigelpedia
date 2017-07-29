@@ -3,7 +3,12 @@
     {
       "domain": "CUSTOMAPP",
       "name": ["enpeedeeuh"],
-      "phrase": [""]
+      "phrase": [
+        ".*enpeedeeuh.*",
+        ".*enpedia.*",
+        ".*wikipedia.*",
+        ".encyclopedia.*"
+      ]
     }
   ]
 }
