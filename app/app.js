@@ -38,9 +38,9 @@ da.segment.onpreprocess = function(trigger, args) {
   outputLog("[SpeechToText] onpreprocess", { trigger: trigger, args: args });
   var fullSpeechString = speechUtil.getUserSpeechCommand(args);
   args = { args: {} };
-  args.args.searchWord = fullSpeechString.match(
+  args.args.searchWord = (fullSpeechString.match(
     /.*?encyclopedia(?: ?for)?(.*)/i
-  )[1];
+  ) || ["", ""])[1];
   speechText = "";
   callbackErrorMessage = "";
   da.startSegment(trigger, args);
@@ -56,7 +56,7 @@ da.segment.onstart = function(trigger, args) {
   var synthesis = da.SpeechSynthesis.getInstance();
   if (args.searchWord.length < 1) {
     synthesis.speak(
-      "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to cancel.",
+      "Welcome to enpeedeeuh. What would you like to learn about? Use a word or short phrase, like 'aviation' or 'wendy house'. Say stop to cancel.",
       {
         onstart: function() {
           outputLog("[SpeechToText] speak onstart");
@@ -112,7 +112,7 @@ var getWikipediaResult = function(word, url, synthesis) {
       synthesis.speak(
         "There was an error with your word " +
           word +
-          ". Can you try a different, single, word? For example, say transport instead of transportation.",
+          ". Can you try a different word or phrase? For example, say banana instead of banana tree.",
         {
           onstart: function() {
             outputLog("[SpeechToText] speak onstart");
@@ -157,6 +157,7 @@ var fetchArticle = function() {
     var word =
       speechText.charAt(0).toUpperCase() +
       speechText.substring(1).toLowerCase();
+    word = word.replace(/\W/, "_");
     outputLog("sppechText is", word);
     var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + word;
     outputLog(url);

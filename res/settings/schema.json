@@ -5,7 +5,7 @@
     "settings": [
       {
         "key": "description",
-        "displayName": "Team Npedia\n\nYou can cue up wikipedia articles by voice! Start the app by saying\n\nstart encyclopedia\nsearch encyclopedia for {word}\n\nContact Us\nroshkins@gmail.com",
+        "displayName": "Team Npedia\n\nYou can cue up wikipedia articles by voice! Start the app by saying\n\nstart encyclopedia\nsearch encyclopedia for {word or short phrase, like \"wendy house\"}\n\nContact Us\nroshkins@gmail.com",
         "layout": "description"
       }
     ]
