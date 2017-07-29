@@ -2,13 +2,8 @@
   "voicePattern": [
     {
       "domain": "CUSTOMAPP",
-      "name": ["enpeedeeuh"],
-      "phrase": [
-        ".*enpeedeeuh.*",
-        ".*enpedia.*",
-        ".*wikipedia.*",
-        ".encyclopedia.*"
-      ]
+      "name": ["encyclopedia"],
+      "phrase": [".*enpeedeeuh.*", ".*enpedia.*", ".*wikipedia.*"]
     }
   ]
 }
