@@ -70,6 +70,57 @@ da.segment.onstart = function(trigger, args) {
 /**
  * The callback to resume a segment for play.
  */
+
+var getWikipediaResult = function(word, url, synthesis) {
+  $.ajax({
+    url: url,
+    xhr: function() {
+      return da.getXhr();
+    },
+    type: "GET",
+    // dataType: "xml",
+    success: function(data, textStatus, jqXHR) {
+      var article = $(data).text();
+      console.log("Wikipedia response:" + article);
+      synthesis.speak(article, {
+        onstart: function() {
+          console.log("[SpeechToText] speak onstart");
+        },
+        onend: function() {
+          console.log("[SpeechToText] speak onend");
+          da.stopSegment();
+        },
+        onerror: function(error) {
+          console.log("[SpeechToText] speak cancel: " + error.message);
+          da.stopSegment();
+        }
+      });
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      synthesis.speak(
+        "There was an error with your word " +
+          word +
+          ". Can you try a different, single, word?",
+        {
+          onstart: function() {
+            console.log("[SpeechToText] speak onstart");
+          },
+          onend: function() {
+            console.log("[SpeechToText] speak onend");
+            var speechToText = new da.SpeechToText();
+            speechToText.startSpeechToText(callbackobject);
+            // da.stopSegment();
+          },
+          onerror: function(error) {
+            console.log("[SpeechToText] speak cancel: " + error.message);
+            da.stopSegment();
+          }
+        }
+      );
+    }
+  });
+};
+
 da.segment.onresume = function() {
   console.log("[SpeechToText] onresume");
   var synthesis = da.SpeechSynthesis.getInstance();
@@ -89,7 +140,6 @@ da.segment.onresume = function() {
     });
     return;
   }
-
   var synthesis = da.SpeechSynthesis.getInstance();
   if (speechText != "") {
     var word =
@@ -98,34 +148,7 @@ da.segment.onresume = function() {
     console.log("sppechText is", word);
     var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + word;
     console.log(url);
-    $.ajax({
-      url: url,
-      xhr: function() {
-        return da.getXhr();
-      },
-      type: "GET",
-      // dataType: "xml",
-      success: function(data, textStatus, jqXHR) {
-        var article = $(data).text();
-        console.log("Wikipedia response:" + article);
-        synthesis.speak(article, {
-          onstart: function() {
-            console.log("[SpeechToText] speak onstart");
-          },
-          onend: function() {
-            console.log("[SpeechToText] speak onend");
-            da.stopSegment();
-          },
-          onerror: function(error) {
-            console.log("[SpeechToText] speak cancel: " + error.message);
-            da.stopSegment();
-          }
-        });
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        da.startSegment(null, { args: { error: "there was an error" } });
-      }
-    });
+    getWikipediaResult(word, url, synthesis);
   } else {
     synthesis.speak(
       "The speech to text API could not recognize what you said. Reason is " +
@@ -161,7 +184,7 @@ var callbackobject = {
     );
     console.log("[SpeechToText] : Results = " + results);
 
-    speechText = results.join(" ");
+    speechText = results[0];
     callbackErrorMessage = "";
   },
   onerror: function(error) {
