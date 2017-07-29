@@ -47,21 +47,24 @@ da.segment.onstart = function(trigger, args) {
   console.log("[SpeechToText] onstart", { trigger: trigger, args: args });
   var synthesis = da.SpeechSynthesis.getInstance();
 
-  synthesis.speak("Welcome to Ronak and Rashi's app! Please say anything", {
-    onstart: function() {
-      console.log("[SpeechToText] speak onstart");
-    },
-    onend: function() {
-      console.log("[SpeechToText] speak onend");
+  synthesis.speak(
+    "Welcome to npedia. What would you like to learn about? Use a single word, like 'aviation'.",
+    {
+      onstart: function() {
+        console.log("[SpeechToText] speak onstart");
+      },
+      onend: function() {
+        console.log("[SpeechToText] speak onend");
 
-      var speechToText = new da.SpeechToText();
-      speechToText.startSpeechToText(callbackobject);
-    },
-    onerror: function(error) {
-      console.log("[SpeechToText] speak cancel: " + error.message);
-      da.stopSegment();
+        var speechToText = new da.SpeechToText();
+        speechToText.startSpeechToText(callbackobject);
+      },
+      onerror: function(error) {
+        console.log("[SpeechToText] speak cancel: " + error.message);
+        da.stopSegment();
+      }
     }
-  });
+  );
 };
 
 /**
@@ -89,34 +92,37 @@ da.segment.onresume = function() {
 
   var synthesis = da.SpeechSynthesis.getInstance();
   if (speechText != "") {
-    synthesis.speak("You said. " + speechText + ". Say anything again.", {
-      onstart: function() {
-        console.log("[SpeechToText] speak onstart");
+    console.log("sppechText is", speechText);
+    var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + speechText;
+    console.log(url);
+    $.ajax({
+      url: url,
+      xhr: function() {
+        return da.getXhr();
       },
-      onend: function() {
-        console.log("[SpeechToText] speak onend");
-        speechToText = "";
-        callbackErrorMessage = "";
-
-        var speechToText = new da.SpeechToText();
-        speechToText.startSpeechToText(callbackobject);
+      type: "GET",
+      // dataType: "xml",
+      success: function(data, textStatus, jqXHR) {
+        var article = $(data).text();
+        console.log("Wikipedia response:" + article);
+        synthesis.speak(article, {
+          onstart: function() {
+            console.log("[SpeechToText] speak onstart");
+          },
+          onend: function() {
+            console.log("[SpeechToText] speak onend");
+            da.stopSegment();
+          },
+          onerror: function(error) {
+            console.log("[SpeechToText] speak cancel: " + error.message);
+            da.stopSegment();
+          }
+        });
       },
-      onerror: function(error) {
-        console.log("[SpeechToText] speak cancel: " + error.message);
-        da.stopSegment();
+      error: function(jqXHR, textStatus, errorThrown) {
+        da.startSegment(null, { args: { error: "there was an error" } });
       }
     });
-
-    var entry = {
-      domain: "Input Speech Text",
-      extension: {},
-      title: speechText,
-      url: "https://translate.google.co.jp/?hl=ja#en/ja/" + speechText,
-      imageUrl:
-        "http://www.sony.net/SonyInfo/News/Press/201603/16-025E/img01.gif",
-      date: new Date().toISOString()
-    };
-    da.addTimeline({ entries: [entry] });
   } else {
     synthesis.speak(
       "The speech to text API could not recognize what you said. Reason is " +
