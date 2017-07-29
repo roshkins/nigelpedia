@@ -32,7 +32,7 @@ var callbackErrorMessage;
  * @param  {object} args    The input arguments.
  */
 da.segment.onpreprocess = function(trigger, args) {
-  console.log("[SpeechToText] onpreprocess", { trigger: trigger, args: args });
+  outputLog("[SpeechToText] onpreprocess", { trigger: trigger, args: args });
   speechText = "";
   callbackErrorMessage = "";
   da.startSegment(trigger, args);
@@ -44,23 +44,23 @@ da.segment.onpreprocess = function(trigger, args) {
  * @param  {object} args    The input arguments.
  */
 da.segment.onstart = function(trigger, args) {
-  console.log("[SpeechToText] onstart", { trigger: trigger, args: args });
+  outputLog("[SpeechToText] onstart", { trigger: trigger, args: args });
   var synthesis = da.SpeechSynthesis.getInstance();
 
   synthesis.speak(
     "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to canecl.",
     {
       onstart: function() {
-        console.log("[SpeechToText] speak onstart");
+        outputLog("[SpeechToText] speak onstart");
       },
       onend: function() {
-        console.log("[SpeechToText] speak onend");
+        outputLog("[SpeechToText] speak onend");
 
         var speechToText = new da.SpeechToText();
         speechToText.startSpeechToText(callbackobject);
       },
       onerror: function(error) {
-        console.log("[SpeechToText] speak cancel: " + error.message);
+        outputLog("[SpeechToText] speak cancel: " + error.message);
         da.stopSegment();
       }
     }
@@ -81,17 +81,17 @@ var getWikipediaResult = function(word, url, synthesis) {
     // dataType: "xml",
     success: function(data, textStatus, jqXHR) {
       var article = $(data).text();
-      console.log("Wikipedia response:" + article);
+      outputLog("Wikipedia response:" + article);
       synthesis.speak(article, {
         onstart: function() {
-          console.log("[SpeechToText] speak onstart");
+          outputLog("[SpeechToText] speak onstart");
         },
         onend: function() {
-          console.log("[SpeechToText] speak onend");
+          outputLog("[SpeechToText] speak onend");
           da.stopSegment();
         },
         onerror: function(error) {
-          console.log("[SpeechToText] speak cancel: " + error.message);
+          outputLog("[SpeechToText] speak cancel: " + error.message);
           da.stopSegment();
         }
       });
@@ -103,16 +103,16 @@ var getWikipediaResult = function(word, url, synthesis) {
           ". Can you try a different, single, word? For example, say transport instead of transportation.",
         {
           onstart: function() {
-            console.log("[SpeechToText] speak onstart");
+            outputLog("[SpeechToText] speak onstart");
           },
           onend: function() {
-            console.log("[SpeechToText] speak onend");
+            outputLog("[SpeechToText] speak onend");
             var speechToText = new da.SpeechToText();
             speechToText.startSpeechToText(callbackobject);
             // da.stopSegment();
           },
           onerror: function(error) {
-            console.log("[SpeechToText] speak cancel: " + error.message);
+            outputLog("[SpeechToText] speak cancel: " + error.message);
             da.stopSegment();
           }
         }
@@ -122,19 +122,19 @@ var getWikipediaResult = function(word, url, synthesis) {
 };
 
 da.segment.onresume = function() {
-  console.log("[SpeechToText] onresume");
+  outputLog("[SpeechToText] onresume");
   var synthesis = da.SpeechSynthesis.getInstance();
   if (0 <= speechText.indexOf("stop")) {
     synthesis.speak("bye bye.", {
       onstart: function() {
-        console.log("[SpeechToText] speak onstart");
+        outputLog("[SpeechToText] speak onstart");
       },
       onend: function() {
-        console.log("[SpeechToText] speak onend");
+        outputLog("[SpeechToText] speak onend");
         da.stopSegment();
       },
       onerror: function(error) {
-        console.log("[SpeechToText] speak cancel: " + error.message);
+        outputLog("[SpeechToText] speak cancel: " + error.message);
         da.stopSegment();
       }
     });
@@ -145,9 +145,9 @@ da.segment.onresume = function() {
     var word =
       speechText.charAt(0).toUpperCase() +
       speechText.substring(1).toLowerCase();
-    console.log("sppechText is", word);
+    outputLog("sppechText is", word);
     var url = "https://en.wikipedia.org/api/rest_v1/page/html/" + word;
-    console.log(url);
+    outputLog(url);
     getWikipediaResult(word, url, synthesis);
   } else {
     synthesis.speak(
@@ -155,14 +155,14 @@ da.segment.onresume = function() {
         callbackErrorMessage,
       {
         onstart: function() {
-          console.log("[SpeechToText] error message speak start");
+          outputLog("[SpeechToText] error message speak start");
         },
         onend: function() {
-          console.log("[SpeechToText] error message speak onend");
+          outputLog("[SpeechToText] error message speak onend");
           da.stopSegment();
         },
         onerror: function(error) {
-          console.log(
+          outputLog(
             "[SpeechToText] error message speak cancel: " + error.message
           );
           da.stopSegment();
@@ -179,19 +179,17 @@ da.segment.onresume = function() {
  */
 var callbackobject = {
   onsuccess: function(results) {
-    console.log(
+    outputLog(
       "[SpeechToText] : SpeechToText process has finished successfully"
     );
-    console.log("[SpeechToText] : Results = " + results);
+    outputLog("[SpeechToText] : Results = " + results);
 
     speechText = results[0];
     callbackErrorMessage = "";
   },
   onerror: function(error) {
-    console.log(
-      "[SpeechToText] : SpeechToText error message = " + error.message
-    );
-    console.log("[SpeechToText] : SpeechToText error code = " + error.code);
+    outputLog("[SpeechToText] : SpeechToText error message = " + error.message);
+    outputLog("[SpeechToText] : SpeechToText error code = " + error.code);
 
     speechText = "";
     callbackErrorMessage = error.message;
