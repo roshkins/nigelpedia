@@ -23,7 +23,6 @@
  * SUCH DAMAGE.
  */
 
-
 var speechText;
 var callbackErrorMessage;
 
@@ -32,11 +31,11 @@ var callbackErrorMessage;
  * @param  {string} trigger The trigger type of a segment.
  * @param  {object} args    The input arguments.
  */
-da.segment.onpreprocess = function (trigger, args) {
-    console.log('[SpeechToText] onpreprocess', {trigger: trigger, args: args});
-    speechText = "";
-    callbackErrorMessage = "";
-    da.startSegment(trigger, args);
+da.segment.onpreprocess = function(trigger, args) {
+  console.log("[SpeechToText] onpreprocess", { trigger: trigger, args: args });
+  speechText = "";
+  callbackErrorMessage = "";
+  da.startSegment(trigger, args);
 };
 
 /**
@@ -44,94 +43,101 @@ da.segment.onpreprocess = function (trigger, args) {
  * @param  {string} trigger The trigger type of a segment.
  * @param  {object} args    The input arguments.
  */
-da.segment.onstart = function (trigger, args) {
-    console.log('[SpeechToText] onstart', {trigger: trigger, args: args});
-    var synthesis = da.SpeechSynthesis.getInstance();
+da.segment.onstart = function(trigger, args) {
+  console.log("[SpeechToText] onstart", { trigger: trigger, args: args });
+  var synthesis = da.SpeechSynthesis.getInstance();
 
-    synthesis.speak('Please say anythings', {
-        onstart: function () {
-            console.log('[SpeechToText] speak onstart');
-        },
-        onend: function () {
-            console.log('[SpeechToText] speak onend');
+  synthesis.speak("Welcome to Ronak and Rashi's app! Please say anything", {
+    onstart: function() {
+      console.log("[SpeechToText] speak onstart");
+    },
+    onend: function() {
+      console.log("[SpeechToText] speak onend");
 
-            var speechToText = new da.SpeechToText();
-            speechToText.startSpeechToText(callbackobject);
-        },
-        onerror: function (error) {
-            console.log('[SpeechToText] speak cancel: ' + error.message);
-            da.stopSegment();
-        }
-    });
+      var speechToText = new da.SpeechToText();
+      speechToText.startSpeechToText(callbackobject);
+    },
+    onerror: function(error) {
+      console.log("[SpeechToText] speak cancel: " + error.message);
+      da.stopSegment();
+    }
+  });
 };
 
 /**
  * The callback to resume a segment for play.
  */
-da.segment.onresume = function () {
-    console.log('[SpeechToText] onresume');
-    var synthesis = da.SpeechSynthesis.getInstance();
-    if (0 <= speechText.indexOf("bye")) {
-        synthesis.speak('bye bye.', {
-            onstart: function () {
-                console.log('[SpeechToText] speak onstart');
-            },
-            onend: function () {
-                console.log('[SpeechToText] speak onend');
-                da.stopSegment();
-            },
-            onerror: function (error) {
-                console.log('[SpeechToText] speak cancel: ' + error.message);
-                da.stopSegment();
-            }
-        });
-        return;
-    }
+da.segment.onresume = function() {
+  console.log("[SpeechToText] onresume");
+  var synthesis = da.SpeechSynthesis.getInstance();
+  if (0 <= speechText.indexOf("stop")) {
+    synthesis.speak("bye bye.", {
+      onstart: function() {
+        console.log("[SpeechToText] speak onstart");
+      },
+      onend: function() {
+        console.log("[SpeechToText] speak onend");
+        da.stopSegment();
+      },
+      onerror: function(error) {
+        console.log("[SpeechToText] speak cancel: " + error.message);
+        da.stopSegment();
+      }
+    });
+    return;
+  }
 
-    var synthesis = da.SpeechSynthesis.getInstance();
-    if (speechText != "") {
-        synthesis.speak('You said. ' + speechText + ". Say anything again.", {
-            onstart: function () {
-                console.log('[SpeechToText] speak onstart');
-            },
-            onend: function () {
-                console.log('[SpeechToText] speak onend');
-                speechToText = "";
-                callbackErrorMessage = "";
+  var synthesis = da.SpeechSynthesis.getInstance();
+  if (speechText != "") {
+    synthesis.speak("You said. " + speechText + ". Say anything again.", {
+      onstart: function() {
+        console.log("[SpeechToText] speak onstart");
+      },
+      onend: function() {
+        console.log("[SpeechToText] speak onend");
+        speechToText = "";
+        callbackErrorMessage = "";
 
-                var speechToText = new da.SpeechToText();
-                speechToText.startSpeechToText(callbackobject);
-            },
-            onerror: function (error) {
-                console.log('[SpeechToText] speak cancel: ' + error.message);
-                da.stopSegment();
-            }
-        });
+        var speechToText = new da.SpeechToText();
+        speechToText.startSpeechToText(callbackobject);
+      },
+      onerror: function(error) {
+        console.log("[SpeechToText] speak cancel: " + error.message);
+        da.stopSegment();
+      }
+    });
 
-        var entry = {
-            domain: "Input Speech Text",
-            extension: {},
-            title: speechText,
-            url: "https://translate.google.co.jp/?hl=ja#en/ja/" + speechText,
-            imageUrl: "http://www.sony.net/SonyInfo/News/Press/201603/16-025E/img01.gif",
-            date: new Date().toISOString()
-        };
-        da.addTimeline({entries: [entry]});
-    } else {
-        synthesis.speak('The speech to text API could not recognize what you said. Reason is ' + callbackErrorMessage, {
-            onstart: function () {
-                console.log('[SpeechToText] error message speak start');
-            },
-            onend: function () {
-                console.log('[SpeechToText] error message speak onend');
-                da.stopSegment();
-            },
-            onerror: function (error) {
-                console.log('[SpeechToText] error message speak cancel: ' + error.message);
-                da.stopSegment();
-            }
-        });
-    }
+    var entry = {
+      domain: "Input Speech Text",
+      extension: {},
+      title: speechText,
+      url: "https://translate.google.co.jp/?hl=ja#en/ja/" + speechText,
+      imageUrl:
+        "http://www.sony.net/SonyInfo/News/Press/201603/16-025E/img01.gif",
+      date: new Date().toISOString()
+    };
+    da.addTimeline({ entries: [entry] });
+  } else {
+    synthesis.speak(
+      "The speech to text API could not recognize what you said. Reason is " +
+        callbackErrorMessage,
+      {
+        onstart: function() {
+          console.log("[SpeechToText] error message speak start");
+        },
+        onend: function() {
+          console.log("[SpeechToText] error message speak onend");
+          da.stopSegment();
+        },
+        onerror: function(error) {
+          console.log(
+            "[SpeechToText] error message speak cancel: " + error.message
+          );
+          da.stopSegment();
+        }
+      }
+    );
+  }
 };
 
 /**
@@ -140,19 +146,22 @@ da.segment.onresume = function () {
  * @type {{onsuccess: callbackobject.onsuccess, onerror: callbackobject.onerror}}
  */
 var callbackobject = {
-    onsuccess: function (results) {
-        console.log('[SpeechToText] : SpeechToText process has finished successfully');
-        console.log('[SpeechToText] : Results = ' + results);
+  onsuccess: function(results) {
+    console.log(
+      "[SpeechToText] : SpeechToText process has finished successfully"
+    );
+    console.log("[SpeechToText] : Results = " + results);
 
-        speechText = results.join(" ");
-        callbackErrorMessage = "";
-    },
-    onerror: function (error) {
-        console.log('[SpeechToText] : SpeechToText error message = ' + error.message)
-        console.log('[SpeechToText] : SpeechToText error code = ' + error.code)
+    speechText = results.join(" ");
+    callbackErrorMessage = "";
+  },
+  onerror: function(error) {
+    console.log(
+      "[SpeechToText] : SpeechToText error message = " + error.message
+    );
+    console.log("[SpeechToText] : SpeechToText error code = " + error.code);
 
-        speechText = "";
-        callbackErrorMessage = error.message;
-
-    }
+    speechText = "";
+    callbackErrorMessage = error.message;
+  }
 };

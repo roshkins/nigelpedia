@@ -5,7 +5,7 @@
     "settings": [
       {
         "key": "description",
-        "displayName": "You can input from speech to text.\n\nVoice commands :\n - Start speech\n - .* (This is regular expression using launch phrase definition.You can launch from any word.)\n\n\nhttps://www.sony.com",
+        "displayName": "You can input from speech to text.\n\nVoice commands :\n- Start speech\n\n\nhttps://www.sony.com",
         "layout": "description"
       }
     ]

@@ -2,12 +2,8 @@
   "voicePattern": [
     {
       "domain": "CUSTOMAPP",
-      "name": [
-        "speech"
-      ],
-      "phrase": [
-        ".*"
-      ]
+      "name": ["speech"],
+      "phrase": [""]
     }
   ]
 }
