@@ -1,11 +1,11 @@
 {
   "package": "com.rashirashi.textspeech",
   "manifestVersion": 1,
-  "name": "Speech To Text API Sample",
+  "name": "Npedia",
   "author": {
     "name": "Rashi and Ronak"
   },
-  "version": 3,
-  "versionName": "1.2.0",
-  "description": "Sony Corporation\nSpeech To Text API Sample, customized!"
+  "version": 4,
+  "versionName": "1.4.0",
+  "description": "Team Npedia\n\nRead wikipedia articles out loud, and cue them up by voice."
 }

@@ -48,7 +48,7 @@ da.segment.onstart = function(trigger, args) {
   var synthesis = da.SpeechSynthesis.getInstance();
 
   synthesis.speak(
-    "Welcome to npedia. What would you like to learn about? Use a single word, like 'aviation'.",
+    "Welcome to enpeedeeuh. What would you like to learn about? Use a single word, like 'aviation'. Say stop to canecl.",
     {
       onstart: function() {
         console.log("[SpeechToText] speak onstart");
@@ -100,7 +100,7 @@ var getWikipediaResult = function(word, url, synthesis) {
       synthesis.speak(
         "There was an error with your word " +
           word +
-          ". Can you try a different, single, word?",
+          ". Can you try a different, single, word? For example, say transport instead of transportation.",
         {
           onstart: function() {
             console.log("[SpeechToText] speak onstart");
